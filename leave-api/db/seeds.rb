@@ -1,47 +1,54 @@
-# Önceki verileri temizle
-User.destroy_all
-Leave.destroy_all
+# db/seeds.rb
 
-# Kullanıcılar
+User.destroy_all if User.any?
+Leave.destroy_all if Leave.any?
+
+# Admin kullanıcı
 admin = User.create!(
-  name: 'Admin User',
-  email: 'admin@example.com',
-  password: 'password123',
-  role: 'admin'
+  name: 'Yönetici Admin',
+  email: 'admin@sirket.com',
+  password: 'admin123',
+  password_confirmation: 'admin123',
+  role: 'admin',
+  remaining_leaves: 20
 )
 
+# Manager kullanıcı
 manager = User.create!(
-  name: 'Manager User',
-  email: 'manager@example.com',
-  password: 'password123',
-  role: 'manager'
+  name: 'Proje Yöneticisi',
+  email: 'manager@sirket.com',
+  password: 'manager123',
+  password_confirmation: 'manager123',
+  role: 'manager',
+  remaining_leaves: 18
 )
 
+# Employee kullanıcı
 employee = User.create!(
-  name: 'Employee User',
-  email: 'employee@example.com',
-  password: 'password123',
-  role: 'employee'
+  name: 'Çalışan Personel',
+  email: 'employee@sirket.com',
+  password: 'employee123',
+  password_confirmation: 'employee123',
+  role: 'employee',
+  remaining_leaves: 15
 )
 
-# İzin kayıtları
-Leave.create!([
-  {
-    user: employee,
-    start_date: Date.today + 7.days,
-    end_date: Date.today + 10.days,
-    leave_type: 'annual',
-    reason: 'Family vacation',
-    status: 'pending'
-  },
-  {
-    user: employee,
-    start_date: Date.today - 5.days,
-    end_date: Date.today - 3.days,
-    leave_type: 'sick',
-    reason: 'Flu',
-    status: 'approved'
-  }
-])
+# Employee için izin talebi
+Leave.create!(
+  user_id: employee.id,
+  leave_type: 'annual',
+  start_date: Date.today + 7.days,
+  end_date: Date.today + 9.days,
+  reason: 'Yıllık izin kullanımı',
+  status: 'pending'
+)
 
-puts "Created #{User.count} users and #{Leave.count} leaves"
+# Manager için izin talebi
+Leave.create!(
+  user_id: manager.id,
+  leave_type: 'sick',
+  start_date: Date.today + 1.day,
+  end_date: Date.today + 2.days,
+  reason: 'Hastalık izni',
+  status: 'approved'
+)
