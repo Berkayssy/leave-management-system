@@ -173,9 +173,9 @@ export default function LoginPage() {
         <div className="mt-8 p-4 bg-gray-50 rounded-lg border border-gray-200">
           <p className="text-xs font-medium text-gray-900 mb-2">Demo Credentials:</p>
           <div className="text-xs text-gray-600 space-y-1">
-            <p>Admin: admin@admin.com / password</p>
-            <p>Manager: manager@company.com / password</p>
-            <p>Employee: employee@company.com / password</p>
+            <p>Admin: admin@example.com / admin123</p>
+            <p>Manager: manager@example.com / manager123</p>
+            <p>Employee: employee@example.com / employee123</p>
           </div>
         </div>
       </div>
