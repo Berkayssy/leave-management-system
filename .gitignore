@@ -1,0 +1,52 @@
+# ============ FRONTEND (Next.js) ============
+node_modules/
+.next/
+out/
+.nuxt/
+.cache/
+.vscode/
+.idea/
+*.log
+
+# ============ BACKEND (Rails) ============
+vendor/
+tmp/
+log/*.log
+storage/
+public/assets
+public/packs
+public/packs-test
+*.sqlite3
+*.sqlite3-*
+
+# ============ DATABASE ============
+*.db
+*.db-journal
+
+# ============ SYSTEM ============
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# ============ ENVIRONMENT ============
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# ============ EDITORS ============
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ============ OPERATING SYSTEM ============
+*.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+[Tt]humbs.db

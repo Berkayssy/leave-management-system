@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔧 API Test Center - Leave Management</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #3b82f6;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --dark: #1f2937;
+            --light: #f3f4f6;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: var(--dark);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-top: 40px;
+        }
+        
+        .logo {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+        
+        h1 {
+            color: white;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .stat-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stat-icon {
+            font-size: 36px;
+            margin-bottom: 15px;
+        }
+        
+        .stat-number {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .api-section {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+        }
+        
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            margin-bottom: 25px;
+            color: var(--dark);
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--light);
+        }
+        
+        .api-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+        }
+        
+        .api-card {
+            background: var(--light);
+            border-radius: 12px;
+            padding: 20px;
+            border-left: 4px solid var(--primary);
+        }
+        
+        .api-card.success { border-left-color: var(--success); }
+        .api-card.warning { border-left-color: var(--warning); }
+        .api-card.danger { border-left-color: var(--danger); }
+        
+        .api-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+        
+        .method {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            color: white;
+            text-transform: uppercase;
+        }
+        
+        .method.get { background: var(--success); }
+        .method.post { background: var(--primary); }
+        .method.put { background: var(--warning); }
+        .method.delete { background: var(--danger); }
+        .method.patch { background: #8b5cf6; }
+        
+        .endpoint {
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 14px;
+            color: var(--dark);
+            word-break: break-all;
+        }
+        
+        .api-description {
+            color: #666;
+            font-size: 14px;
+            margin: 10px 0;
+            line-height: 1.5;
+        }
+        
+        .test-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .btn {
+            padding: 10px 16px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #2563eb;
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background: #e5e7eb;
+            color: var(--dark);
+        }
+        
+        .btn-secondary:hover {
+            background: #d1d5db;
+        }
+        
+        .response-container {
+            margin-top: 20px;
+            background: #1e293b;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .response-header {
+            background: #0f172a;
+            padding: 12px 20px;
+            color: white;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .response-body {
+            padding: 20px;
+            color: #e2e8f0;
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 13px;
+            max-height: 300px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+        
+        .copy-btn {
+            background: #475569;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        
+        .copy-btn:hover {
+            background: #64748b;
+        }
+        
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .status-success {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        
+        .status-error {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        
+        .status-pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 20px;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+        }
+        
+        @media (max-width: 768px) {
+            .api-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">🔧</div>
+            <h1>API Test Center</h1>
+            <p class="subtitle">Leave Management System - Rails API Endpoints</p>
+        </header>
+
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-icon">🚀</div>
+                <div class="stat-number" id="apiStatus">Online</div>
+                <div class="stat-label">API Status</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">⚡</div>
+                <div class="stat-number" id="responseTime">0ms</div>
+                <div class="stat-label">Avg Response Time</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🔌</div>
+                <div class="stat-number">3001</div>
+                <div class="stat-label">API Port</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">✅</div>
+                <div class="stat-number" id="successRate">100%</div>
+                <div class="stat-label">Success Rate</div>
+            </div>
+        </div>
+
+        <!-- Auth API Section -->
+        <div class="api-section">
+            <h2 class="section-title">
+                <i class="fas fa-user-shield"></i> Authentication APIs
+            </h2>
+            <div class="api-grid">
+                <div class="api-card success">
+                    <div class="api-header">
+                        <span class="method post">POST</span>
+                        <span class="endpoint">/api/v1/auth/login</span>
+                    </div>
+                    <p class="api-description">User login with email and password. Returns JWT token.</p>
+                    <div class="test-buttons">
+                        <button class="btn btn-primary" onclick="testLogin()">
+                            <i class="fas fa-play"></i> Test Login
+                        </button>
+                        <button class="btn btn-secondary" onclick="showSample('login')">
+                            <i class="fas fa-eye"></i> Sample
+                        </button>
+                    </div>
+                </div>
+
+                <div class="api-card">
+                    <div class="api-header">
+                        <span class="method get">GET</span>
+                        <span class="endpoint">/api/v1/auth/me</span>
+                    </div>
+                    <p class="api-description">Get current user information (requires authentication).</p>
+                    <div class="test-buttons">
+                        <button class="btn btn-primary" onclick="testGetMe()">
+                            <i class="fas fa-play"></i> Test Get User
+                        </button>
+                    </div>
+                </div>
+
+                <div class="api-card warning">
+                    <div class="api-header">
+                        <span class="method post">POST</span>
+                        <span class="endpoint">/api/v1/auth/logout</span>
+                    </div>
+                    <p class="api-description">Logout user (client-side token cleanup).</p>
+                    <div class="test-buttons">
+                        <button class="btn btn-primary" onclick="testLogout()">
+                            <i class="fas fa-play"></i> Test Logout
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Leaves API Section -->
+        <div class="api-section">
+            <h2 class="section-title">
+                <i class="fas fa-calendar-alt"></i> Leaves Management APIs
+            </h2>
+            <div class="api-grid">
+                <div class="api-card">
+                    <div class="api-header">
+                        <span class="method get">GET</span>
+                        <span class="endpoint">/api/v1/leaves</span>
+                    </div>
+                    <p class="api-description">Get all leaves for current user.</p>
+                    <div class="test-buttons">
+                        <button class="btn btn-primary" onclick="testGetLeaves()">
+                            <i class="fas fa-play"></i> Test Get Leaves
+                        </button>
+                    </div>
+                </div>
+
+                <div class="api-card success">
+                    <div class="api-header">
+                        <span class="method post">POST</span>
+                        <span class="endpoint">/api/v1/leaves</span>
+                    </div>
+                    <p class="api-description">Create a new leave request.</p>
+                    <div class="test-buttons">
+                        <button class="btn btn-primary" onclick="testCreateLeave()">
+                            <i class="fas fa-play"></i> Test Create Leave
+                        </button>
+                        <button class="btn btn-secondary" onclick="showSample('createLeave')">
+                            <i class="fas fa-eye"></i> Sample
+                        </button>
+                    </div>
+                </div>
+
+                <div class="api-card warning">
+                    <div class="api-header">
+                        <span class="method put">PUT</span>
+                        <span class="endpoint">/api/v1/leaves/:id</span>
+                    </div>
+                    <p class="api-description">Update a leave request.</p>
+                    <div class="test-buttons">
+                        <button class="btn btn-primary" onclick="testUpdateLeave()">
+                            <i class="fas fa-play"></i> Test Update
+                        </button>
+                    </div>
+                </div>
+
+                <div class="api-card danger">
+                    <div class="api-header">
+                        <span class="method delete">DELETE</span>
+                        <span class="endpoint">/api/v1/leaves/:id</span>
+                    </div>
+                    <p class="api-description">Delete a leave request.</p>
+                    <div class="test-buttons">
+                        <button class="btn btn-primary" onclick="testDeleteLeave()">
+                            <i class="fas fa-play"></i> Test Delete
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Manager API Section -->
+        <div class="api-section">
+            <h2 class="section-title">
+                <i class="fas fa-user-tie"></i> Manager APIs
+            </h2>
+            <div class="api-grid">
+                <div class="api-card">
+                    <div class="api-header">
+                        <span class="method get">GET</span>
+                        <span class="endpoint">/api/v1/manager/dashboard</span>
+                    </div>
+                    <p class="api-description">Get manager dashboard statistics.</p>
+                    <div class="test-buttons">
+                        <button class="btn btn-primary" onclick="testManagerDashboard()">
+                            <i class="fas fa-play"></i> Test Dashboard
+                        </button>
+                    </div>
+                </div>
+
+                <div class="api-card success">
+                    <div class="api-header">
+                        <span class="method patch">PATCH</span>
+                        <span class="endpoint">/api/v1/manager/leaves/:id/approve</span>
+                    </div>
+                    <p class="api-description">Approve a leave request.</p>
+                    <div class="test-buttons">
+                        <button class="btn btn-primary" onclick="testApproveLeave()">
+                            <i class="fas fa-play"></i> Test Approve
+                        </button>
+                    </div>
+                </div>
+
+                <div class="api-card danger">
+                    <div class="api-header">
+                        <span class="method patch">PATCH</span>
+                        <span class="endpoint">/api/v1/manager/leaves/:id/reject</span>
+                    </div>
+                    <p class="api-description">Reject a leave request.</p>
+                    <div class="test-buttons">
+                        <button class="btn btn-primary" onclick="testRejectLeave()">
+                            <i class="fas fa-play"></i> Test Reject
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Response Display Area -->
+        <div class="api-section">
+            <h2 class="section-title">
+                <i class="fas fa-code"></i> API Response
+            </h2>
+            <div id="responseArea">
+                <div class="response-container">
+                    <div class="response-header">
+                        <span>Response will appear here...</span>
+                        <button class="copy-btn" onclick="copyResponse()" style="display: none;">
+                            <i class="fas fa-copy"></i> Copy
+                        </button>
+                    </div>
+                    <div class="response-body" id="responseOutput">
+                        Click any test button to see the API response here.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>Leave Management System API Test Center | Rails API Port: 3001 | Frontend: http://localhost:3000</p>
+            <p style="margin-top: 10px; font-size: 12px;">
+                <i class="fas fa-info-circle"></i> Use this page to test all API endpoints before integrating with frontend
+            </p>
+        </footer>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:3001/api/v1';
+        let currentToken = localStorage.getItem('token');
+        let testResults = {
+            success: 0,
+            failed: 0,
+            totalTime: 0
+        };
+
+        // Update stats
+        function updateStats() {
+            const total = testResults.success + testResults.failed;
+            const successRate = total > 0 ? Math.round((testResults.success / total) * 100) : 100;
+            const avgTime = testResults.totalTime > 0 ? Math.round(testResults.totalTime / total) : 0;
+            
+            document.getElementById('successRate').textContent = `${successRate}%`;
+            document.getElementById('responseTime').textContent = `${avgTime}ms`;
+        }
+
+        // Show API response
+        function showResponse(status, data, time) {
+            const responseOutput = document.getElementById('responseOutput');
+            const copyBtn = document.querySelector('.copy-btn');
+            
+            let statusClass = 'status-success';
+            if (status >= 400) statusClass = 'status-error';
+            else if (status >= 300) statusClass = 'status-pending';
+            
+            const statusHtml = `<span class="status-indicator ${statusClass}">
+                <i class="fas fa-${status >= 400 ? 'times' : 'check'}"></i>
+                HTTP ${status}
+            </span>`;
+            
+            const timeHtml = `<span style="color: #94a3b8;">(${time}ms)</span>`;
+            
+            responseOutput.innerHTML = `${statusHtml} ${timeHtml}\n\n` + 
+                JSON.stringify(data, null, 2);
+            
+            copyBtn.style.display = 'inline-block';
+            
+            // Update test results
+            if (status >= 200 && status < 300) {
+                testResults.success++;
+            } else {
+                testResults.failed++;
+            }
+            testResults.totalTime += time;
+            updateStats();
+        }
+
+        // Copy response to clipboard
+        function copyResponse() {
+            const responseText = document.getElementById('responseOutput').textContent;
+            navigator.clipboard.writeText(responseText).then(() => {
+                alert('Response copied to clipboard!');
+            });
+        }
+
+        // Show sample data
+        function showSample(type) {
+            const samples = {
+                login: {
+                    request: {
+                        email: "manager@company.com",
+                        password: "password123"
+                    },
+                    response: {
+                        token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+                        user: {
+                            id: 1,
+                            name: "Manager User",
+                            email: "manager@company.com",
+                            role: "manager"
+                        }
+                    }
+                },
+                createLeave: {
+                    request: {
+                        leave: {
+                            start_date: "2024-01-15",
+                            end_date: "2024-01-20",
+                            leave_type: "annual",
+                            reason: "Annual vacation"
+                        }
+                    },
+                    response: {
+                        id: 123,
+                        start_date: "2024-01-15",
+                        end_date: "2024-01-20",
+                        leave_type: "annual",
+                        reason: "Annual vacation",
+                        status: "pending",
+                        user_id: 1,
+                        created_at: "2024-01-12T10:30:00Z"
+                    }
+                }
+            };
+            
+            const sample = samples[type];
+            if (sample) {
+                const responseOutput = document.getElementById('responseOutput');
+                responseOutput.innerHTML = `📋 SAMPLE REQUEST:\n${JSON.stringify(sample.request, null, 2)}\n\n` +
+                                          `📋 SAMPLE RESPONSE:\n${JSON.stringify(sample.response, null, 2)}`;
+            }
+        }
+
+        // API Test Functions
+        async function testLogin() {
+            const startTime = Date.now();
+            try {
+                const response = await fetch(`${API_BASE}/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email: "manager@company.com",
+                        password: "password123"
+                    })
+                });
+                
+                const data = await response.json();
+                const endTime = Date.now();
+                
+                if (response.ok && data.token) {
+                    currentToken = data.token;
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('user', JSON.stringify(data.user));
+                }
+                
+                showResponse(response.status, data, endTime - startTime);
+            } catch (error) {
+                showResponse(0, { error: error.message }, Date.now() - startTime);
+            }
+        }
+
+        async function testGetMe() {
+            if (!currentToken) {
+                alert('Please login first!');
+                return;
+            }
+            
+            const startTime = Date.now();
+            try {
+                const response = await fetch(`${API_BASE}/auth/me`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${currentToken}`
+                    }
+                });
+                
+                const data = await response.json();
+                const endTime = Date.now();
+                showResponse(response.status, data, endTime - startTime);
+            } catch (error) {
+                showResponse(0, { error: error.message }, Date.now() - startTime);
+            }
+        }
+
+        async function testLogout() {
+            const startTime = Date.now();
+            try {
+                const response = await fetch(`${API_BASE}/auth/logout`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${currentToken}`
+                    }
+                });
+                
+                const data = await response.json();
+                const endTime = Date.now();
+                
+                if (response.ok) {
+                    currentToken = null;
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('user');
+                }
+                
+                showResponse(response.status, data, endTime - startTime);
+            } catch (error) {
+                showResponse(0, { error: error.message }, Date.now() - startTime);
+            }
+        }
+
+        async function testGetLeaves() {
+            if (!currentToken) {
+                alert('Please login first!');
+                return;
+            }
+            
+            const startTime = Date.now();
+            try {
+                const response = await fetch(`${API_BASE}/leaves`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${currentToken}`
+                    }
+                });
+                
+                const data = await response.json();
+                const endTime = Date.now();
+                showResponse(response.status, data, endTime - startTime);
+            } catch (error) {
+                showResponse(0, { error: error.message }, Date.now() - startTime);
+            }
+        }
+
+        async function testCreateLeave() {
+            if (!currentToken) {
+                alert('Please login first!');
+                return;
+            }
+            
+            const startTime = Date.now();
+            try {
+                const response = await fetch(`${API_BASE}/leaves`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${currentToken}`
+                    },
+                    body: JSON.stringify({
+                        leave: {
+                            start_date: new Date(Date.now() + 86400000 * 7).toISOString().split('T')[0],
+                            end_date: new Date(Date.now() + 86400000 * 14).toISOString().split('T')[0],
+                            leave_type: "annual",
+                            reason: "Testing API from test center"
+                        }
+                    })
+                });
+                
+                const data = await response.json();
+                const endTime = Date.now();
+                showResponse(response.status, data, endTime - startTime);
+            } catch (error) {
+                showResponse(0, { error: error.message }, Date.now() - startTime);
+            }
+        }
+
+        async function testUpdateLeave() {
+            alert('First create a leave, then update it using its ID');
+        }
+
+        async function testDeleteLeave() {
+            alert('First create a leave, then delete it using its ID');
+        }
+
+        async function testManagerDashboard() {
+            if (!currentToken) {
+                alert('Please login first!');
+                return;
+            }
+            
+            const startTime = Date.now();
+            try {
+                const response = await fetch(`${API_BASE}/manager/dashboard`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${currentToken}`
+                    }
+                });
+                
+                const data = await response.json();
+                const endTime = Date.now();
+                showResponse(response.status, data, endTime - startTime);
+            } catch (error) {
+                showResponse(0, { error: error.message }, Date.now() - startTime);
+            }
+        }
+
+        async function testApproveLeave() {
+            alert('First get a pending leave ID from manager dashboard');
+        }
+
+        async function testRejectLeave() {
+            alert('First get a pending leave ID from manager dashboard');
+        }
+
+        // Check API status on load
+        window.onload = async function() {
+            try {
+                const startTime = Date.now();
+                const response = await fetch(`${API_BASE}/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: "test", password: "test" })
+                });
+                const endTime = Date.now();
+                
+                document.getElementById('apiStatus').innerHTML = 
+                    `<span style="color: #10b981;">Online</span> (${endTime - startTime}ms)`;
+            } catch (error) {
+                document.getElementById('apiStatus').innerHTML = 
+                    `<span style="color: #ef4444;">Offline</span>`;
+            }
+        };
+    </script>
+</body>
+</html>
