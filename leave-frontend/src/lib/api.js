@@ -1,5 +1,5 @@
 // frontend/lib/api.js
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api/v1';
+const API_URL = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001') + '/api/v1';
 
 export const api = {
   request: async (endpoint, options = {}) => {
